@@ -1,0 +1,3 @@
+ 
+ 'Pre-receive' is executed as soon as the server receives a 'push' 'update' is similar but it executes once for each branch
+'post-receive' is executed when a 'push' is completely finished
