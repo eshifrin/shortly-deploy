@@ -3,6 +3,13 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     concat: {
+      options: {
+        separator: ';\n',
+      },
+      dist: {
+        src: ['public/client/*.js'],
+        dest: 'public/client/built.js',
+      },
     },
 
     mochaTest: {
@@ -21,6 +28,11 @@ module.exports = function(grunt) {
     },
 
     uglify: {
+      target: {
+        files: {
+          'public/client/built.min.js': ['public/client/built.js']
+        }
+      }
     },
 
     eslint: {
@@ -97,7 +109,7 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('deploy', [
-    'cssmin', 'nodemon'
+    'cssmin', 'concat', 'uglify', 'nodemon'
   ]);
 
   grunt.registerTask('default', [
