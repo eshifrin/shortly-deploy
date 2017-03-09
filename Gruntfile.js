@@ -30,6 +30,15 @@ module.exports = function(grunt) {
     },
 
     cssmin: {
+      options: {
+        mergeIntoShorthands: false,
+        roundingPrecision: -1
+      },
+      target: {
+        files: {
+          'public/style.min.css': ['public/style.css']
+        }
+      }
     },
 
     watch: {
@@ -88,8 +97,11 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('deploy', [
-    // add your deploy tasks here
+    'cssmin', 'nodemon'
   ]);
 
+  grunt.registerTask('default', [
+    grunt.task.run(['deploy'])    
+  ]);
 
 };
