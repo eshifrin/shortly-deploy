@@ -15,6 +15,7 @@ module.exports = function(grunt) {
     mochaTest: {
       test: {
         options: {
+          bail: true,
           reporter: 'spec'
         },
         src: ['test/**/*.js']
@@ -36,9 +37,11 @@ module.exports = function(grunt) {
     },
 
     eslint: {
-      target: [
-        // Add list of files to lint here
-      ]
+      options: {
+        // format: "./formatter/htmlTable",
+        quiet: false
+      },
+      src: ['public/client/app.js']
     },
 
     cssmin: {
@@ -109,7 +112,7 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('deploy', [
-    'cssmin', 'concat', 'uglify', 'nodemon'
+    'cssmin', 'eslint', 'concat', 'uglify', 'nodemon'
   ]);
 
   grunt.registerTask('default', [
