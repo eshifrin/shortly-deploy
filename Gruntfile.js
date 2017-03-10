@@ -122,7 +122,7 @@ module.exports = function(grunt) {
     'concat',
     'uglify',
     'cssmin'
-      ]);
+      ]); 
 
   grunt.registerTask('upload', function(n) {
     if (grunt.option('prod')) {
