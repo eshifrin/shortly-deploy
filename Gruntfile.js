@@ -3,19 +3,19 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     concat: {
+
       options: {
-        separator: ';\n',
+        separator: ';'
       },
       dist: {
-        src: ['public/client/*.js'],
-        dest: 'public/client/built.js',
-      },
-    },
+        src: ['public/client/**/*.js'],
+        dest: 'public/dist/<%= pkg.name %>.js'
+      }
+          },
 
     mochaTest: {
       test: {
         options: {
-          bail: true,
           reporter: 'spec'
         },
         src: ['test/**/*.js']
@@ -29,32 +29,40 @@ module.exports = function(grunt) {
     },
 
     uglify: {
-      target: {
+
+      options: {
+        banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
+      },
+      dist: {
         files: {
-          'public/client/built.min.js': ['public/client/built.js']
+          'public/dist/<%= pkg.name %>.min.js': ['<%= concat.dist.dest %>']
         }
       }
-    },
+          },
 
     eslint: {
-      options: {
-        // format: "./formatter/htmlTable",
-        quiet: false
-      },
-      src: ['public/client/app.js']
+      target: [
+
+        'Gruntfile.js',
+        'app/**/*.js',
+        'public/**/*.js',
+        'lib/**/*.js',
+        './*.js',
+        'spec/**/*.js'
+              ]
     },
 
     cssmin: {
+
       options: {
-        mergeIntoShorthands: false,
-        roundingPrecision: -1
+        keepSpecialComments: 0
       },
-      target: {
+      dist: {
         files: {
-          'public/style.min.css': ['public/style.css']
+          'public/dist/style.min.css': 'public/style.css'
         }
       }
-    },
+          },
 
     watch: {
       scripts: {
@@ -75,7 +83,14 @@ module.exports = function(grunt) {
 
     shell: {
       prodServer: {
-      }
+
+        command: 'git push live master',
+        options: {
+          stdout: true,
+          stderr: true,
+          failOnError: true
+        }
+              }
     },
   });
 
@@ -97,26 +112,33 @@ module.exports = function(grunt) {
   ////////////////////////////////////////////////////
 
   grunt.registerTask('test', [
-    'mochaTest'
+
+    //'eslint',
+        'mochaTest'
   ]);
 
   grunt.registerTask('build', [
-  ]);
+
+    'concat',
+    'uglify',
+    'cssmin'
+      ]);
 
   grunt.registerTask('upload', function(n) {
     if (grunt.option('prod')) {
-      // add your production server task here
-    } else {
+
+      grunt.task.run([ 'shell:prodServer' ]);
+          } else {
       grunt.task.run([ 'server-dev' ]);
     }
   });
 
   grunt.registerTask('deploy', [
-    'cssmin', 'eslint', 'concat', 'uglify', 'nodemon'
-  ]);
 
-  grunt.registerTask('default', [
-    grunt.task.run(['deploy'])    
-  ]);
+    'test',
+    'build',
+    'upload'
+      ]);
+
 
 };
