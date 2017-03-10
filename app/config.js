@@ -1,31 +1,32 @@
+// var mongoose = require('mongoose');
+// mongoose.connect('mongodb://localhost/test');
+// var Cat = mongoose.model('Cat', { name: String });
+
+// var kitty = new Cat({ name: 'Zildjian' });
+// kitty.save(function (err) {
+//   if (err) {
+//     console.log(err);
+//   } else {
+//     console.log('meow');
+//   }
+// });
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/test');
-var Schema = mongoose.Schema;
-
-var users = new Schema({
-  id: Number,
-  username: String,
-  password: String,
-  timestamp: { type: Date, default: Date.now }
+mongoose.connect('mongodb://127.0.0.1/shortlydb');
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  console.log('relatively uninteresting');
 });
 
-var urls = new Schema({
-  id: Number,
-  url: String,
-  baseUrl: String,
-  code: String,
-  title: String,
-  visits: Number,
-  timestamp: { type: Date, default: Date.now }
-});
 
-var Users = mongoose.model('users', users);
-var Urls = mongoose.model('urls', urls);
+// module.exports = db;
 
-module.exports = {
-  Users: Users,
-  Urls: Urls
-}
+
+
+// module.exports = {
+//   Users: Users,
+//   Urls: Urls
+// }
 
 
 
